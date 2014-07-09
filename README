@@ -1,0 +1,22 @@
+kallitheaci
+
+This is the kallitheaci module.  It configures a server for continuous
+integration services for the Kallithea project.
+
+Jenkins and Docker are the primary components of the system.
+
+License
+-------
+
+GPLv3
+
+Contact
+-------
+
+Tim Freund, tim@freunds.net
+
+Support
+-------
+
+Please log tickets and issues at [the project page](https://github.com/timfreund/puppet-kallitheaci) or find me in
+#kallithea on Freenode.
