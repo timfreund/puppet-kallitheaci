@@ -37,6 +37,21 @@ class kallitheaci {
     "mercurial": ;
   }
 
+  jenkins::plugin {
+    "xunit": ;
+  }
+
+  package {'mercurial':
+    ensure => installed
+  }
+
+  package {'python-pip':
+    ensure => installed
+  }
+
+  python::pip { 'fig':
+    pkgname => 'fig'
+  }
 
   package {'apt-transport-https':
     # required to use docker's apt repo
@@ -46,11 +61,11 @@ class kallitheaci {
 
   apt::source {'docker':
     location          => 'https://get.docker.io/ubuntu',
-    release => '',
+    release           => '',
     repos => 'docker main',
     key               => '36A1D7869245C8950F966E92D8576A8BA88D21E9',
     key_server        => 'keyserver.ubuntu.com',
-    include_src => false,
+    include_src       => false,
     before => Package['lxc-docker'],
   }
 
@@ -71,4 +86,6 @@ class kallitheaci {
   service {'docker':
     ensure => running,
   }
+
+  Package['lxc-docker'] -> Service['docker']
 }
