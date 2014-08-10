@@ -50,7 +50,8 @@ class kallitheaci {
   }
 
   python::pip { 'fig':
-    pkgname => 'fig'
+    pkgname => 'fig',
+    url = > 'git+https://github.com/docker/fig.git#egg=fig'
   }
 
   package {'apt-transport-https':
