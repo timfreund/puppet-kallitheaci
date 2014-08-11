@@ -51,7 +51,11 @@ class kallitheaci {
 
   python::pip { 'fig':
     pkgname => 'fig',
-    url = > 'git+https://github.com/docker/fig.git#egg=fig'
+    url => 'git+https://github.com/docker/fig.git#egg=fig'
+  }
+
+  python::pip { 'jenkins-job-builder':
+    pkgname => 'jenkins-job-builder',
   }
 
   package {'apt-transport-https':
@@ -88,5 +92,36 @@ class kallitheaci {
     ensure => running,
   }
 
+  file {'/var/lib/jenkins/config.xml':
+    content => template('kallitheaci/jenkins/config.xml.erb'),
+    mode => 644,
+    owner => jenkins,
+    group => jenkins
+  }
+
+  file {'/var/lib/jenkins/users':
+    mode => 755,
+    ensure => directory,
+    owner => jenkins,
+    group => jenkins
+  }
+
+  file {'/var/lib/jenkins/users/kallithea':
+    mode => 755,
+    ensure => directory,
+    owner => jenkins,
+    group => jenkins
+  }
+
+  file{'jenkins-user-kallithea-config.xml':
+    path => '/var/lib/jenkins/users/kallithea/config.xml',
+    content => template('kallitheaci/jenkins/user-kallithea-config.xml.erb'),
+    mode => 644,
+    owner => jenkins,
+    group => jenkins
+  }
+
+  File['/var/lib/jenkins/users'] -> File['/var/lib/jenkins/users/kallithea']
+  File['/var/lib/jenkins/users/kallithea'] -> File['jenkins-user-kallithea-config.xml']
   Package['lxc-docker'] -> Service['docker']
 }
