@@ -45,13 +45,18 @@ class kallitheaci {
     ensure => installed
   }
 
+  package {'git':
+    ensure => installed
+  }
+
   package {'python-pip':
     ensure => installed
   }
 
   python::pip { 'fig':
     pkgname => 'fig',
-    url => 'git+https://github.com/docker/fig.git#egg=fig'
+    url => 'git+https://github.com/docker/fig.git'
+    require => Package['git'],
   }
 
   python::pip { 'jenkins-job-builder':
