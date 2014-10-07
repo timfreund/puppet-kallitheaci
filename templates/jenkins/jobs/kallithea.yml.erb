@@ -1,0 +1,36 @@
+- job:
+    name: kallithea-nosetests
+    project-type: matrix
+    axes:
+      - axis:
+          type: user-defined
+          name: database
+          values:
+            - sqlite
+            - mysql
+            - postgresql
+    builders:
+      - shell: |
+          mkdir -p output
+          chmod 777 output
+          rm -f output/xunit-${database}.xml
+          fig -f ci-configurations/fig-${database}.yml -p kallithea-${database} rm --force
+          fig -f ci-configurations/fig-${database}.yml -p kallithea-${database} build
+          fig -f ci-configurations/fig-${database}.yml -p kallithea-${database} up --no-color
+    publishers:
+      - xunit:
+          thresholdmode: 'percent'
+          thresholds:
+            - failed:
+                unstable: 0
+                unstablenew: 0
+                failure: 0
+                failurenew: 0
+            - skipped:
+                unstable: 0
+                unstablenew: 0
+                failure: 0
+                failurenew: 0
+          types:
+            - junit:
+                pattern: output/xunit-${database}.xml

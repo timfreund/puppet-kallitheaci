@@ -121,7 +121,32 @@ class kallitheaci {
     group => jenkins
   }
 
+  file{'/etc/jenkins_jobs':
+    mode => 700,
+    ensure => directory,
+    owner => jenkins,
+    group => jenkins,
+  }
+
+  file{'jenkins_jobs.ini':
+    path => '/etc/jenkins_jobs/jenkins_jobs.ini',
+    content => template('kallitheaci/jenkins/jobs/jenkins_jobs.ini.erb'),
+    mode => 600,
+    owner => jenkins,
+    group => jenkins,
+  }
+
+  file{'kallithea.yml':
+    path => '/etc/jenkins_jobs/kallithea.yml',
+    content => template('kallitheaci/jenkins/jobs/kallithea.yml.erb'),
+    mode => 600,
+    owner => jenkins,
+    group => jenkins,
+  }
+
   File['/var/lib/jenkins/users'] -> File['/var/lib/jenkins/users/kallithea']
   File['/var/lib/jenkins/users/kallithea'] -> File['jenkins-user-kallithea-config.xml']
+  File['/etc/jenkins_jobs'] -> File['jenkins_jobs.ini']
+  File['/etc/jenkins_jobs'] -> File['kallithea.yml']
   Package['lxc-docker'] -> Service['docker']
 }
