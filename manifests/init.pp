@@ -55,7 +55,7 @@ class kallitheaci {
 
   python::pip { 'fig':
     pkgname => 'fig',
-    url => 'git+https://github.com/docker/fig.git'
+    url => 'git+https://github.com/docker/fig.git',
     require => Package['git'],
   }
 
